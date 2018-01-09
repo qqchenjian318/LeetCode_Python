@@ -1,0 +1,198 @@
+# ！Given a sorted array, remove the duplicates in place such that each element appear only once
+# ！and return the new length.
+# ！Do not allocate extra space for another array, you must do this in place with constant memory.
+# ！For example, Given input array A = [1,1,2],
+# ！Your function should return length = 2, and A is now [1,2].
+from re import L
+
+
+def remove_duplicates(L=[]):
+    x = 0
+    n = 1
+    index = 0
+    while n < len(L):
+        if L[x] != L[n]:
+            x += 1
+            L[x] = L[n]
+            index += 1
+        n += 1
+
+    return L[0:index + 1]
+
+
+# Follow up for ”Remove Duplicates”: What if duplicates are allowed at most twice?
+# For example, Given sorted array A = [1,1,1,2,2,3],
+# Your function should return length = 5, and A is now [1,1,2,2,3]
+def remove_duplicates_twice(L=[]):
+    x = 0
+    n = 1
+    index = 0
+    count = 0
+    while n < len(L):
+        if L[n] != L[index]:
+            x += 1
+            L[x] = L[n]
+            count = 0
+            index += 1
+        else:
+            if count <= 1:
+                x += 1
+                L[x] = L[n]
+                count += 2
+                index += 1
+
+        n += 1
+    return L[0:index + 1]
+
+
+# Suppose a sorted array is rotated at some pivot unknown to you beforehand.
+# (i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
+# You are given a target value to search. If found in the array return its index, otherwise return -1.
+# You may assume no duplicate exists in the array.
+# 不管旋转还是没有旋转过 每次二分 总有一边是有序的
+def search_in_rotated_array(L=[], target=0):
+    last = len(L)
+    first = 0
+    while first != last:
+        mid = int((first + (last - first) / 2))
+        if L[mid] == target:
+            return mid
+        if L[first] <= L[mid]:
+            # 说明 这边是有序的
+            if L[first] <= target <= L[mid]:
+                last = mid
+            else:
+                # 说明 在另一边
+                first = mid + 1
+        else:
+            if L[mid] <= target <= L[last - 1]:
+                first = mid + 1
+            else:
+                last = mid
+    return -1
+
+
+# Follow up for ”Search in Rotated Sorted Array”: What if duplicates are allowed?
+# Would this affect the run-time complexity? How and why?
+# Write a function to determine if a given target is in the array.
+# 这个跟上上面的有一个不同点就是，可能会出现等于的情况 而且如果目标存在重复的
+# 那么可能只会随机返回其中一个的index
+
+def search_in_rotated_duplicates_array(L=[], target=0):
+    last = len(L)
+    first = 0
+    while first != last:
+        mid = int(first + (last - first) / 2)
+        if L[mid] == target:
+            return mid
+        if L[first] < L[mid]:
+            # 说明是有序的
+            if L[first] <= target <= L[mid]:
+                last = mid
+            else:
+                first = mid + 1
+        elif L[first] > L[mid]:
+
+            # 说明不是有序的 那么另一边有两种情况 刚好等于 以及是有序的
+            if L[mid] <= target <= L[last - 1]:
+                first = mid + 1
+            else:
+                last = mid
+        else:
+            # 说明第一个字和中间值相等 那么index 肯定不是第一个 所以 直接first++ 就好
+            first += 1
+
+    return -1
+
+
+# There are two sorted arrays A and B of size m and n respectively. Find the median of the two sorted
+# arrays. The overall run time complexity should be O(log(m + n)).
+# 找到两个排序数组中的 中间值 median(中间的 )
+# 該题更通用的说法应该是 从两个给定的排序数组中找到第k大的元素的位置
+# 时间复杂度 要求O(log(m + n))
+#
+# 思路
+# 1 两个数组进行合并依次读取数据直到第 k大的元素 但是时间复杂度三O(m + n)
+# 2 如果是取中间的 那么 k = ( m + n) / 2
+# 3 那么可以用二分的思想 一半一半的排除 才能让时间复杂度达到O(log ( m + n))
+# 4 首先 将m数组的 第m/2个元素 和n数组的第 n/2个元素进行比较
+# 5
+# #
+def find_k_from_two_sort_arrays(L=[], B=[], k=1):
+    # k表示第k大的元素
+    a = len(L)
+    b = len(B)
+    l = a + b
+
+    pass
+
+
+def find_kth(A=[], n=0, B=[], m=0, k=0):
+    if m == 0:
+        return B[k]
+
+    if L[k] == B[k]:
+        return L[k]
+    elif L[k] < B[k]:
+        pass
+    else:
+        pass
+
+
+# Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
+# For example, Given [100, 4, 200, 1, 3, 2], The longest consecutive elements sequence is [1,
+# 2, 3, 4]. Return its length: 4.
+# Your algorithm should run in O(n) complexity.
+# 一个没有排序的数组，找出最长的连续数组的长度 时间复杂度在O(n)以内
+# 意思就是一次读取数据 就完成选择 用一个dict来记录 所有数据 i
+# 然后 依次i++ 和i-- 如果有数据 并且还没用过 就length++  直到所有的数据 都循环一遍
+#
+def get_sort_length(A=[]):
+    d = {}
+    for i in A:
+        d[i] = False
+
+    longest = 0
+    for i in d:
+        if d[i]:
+            return
+        length = 1
+        d[i] = True
+        z = i - 1
+        while z >= 0:
+            if d.get(z) is None:
+                break
+            else:
+                if not d.get(z):
+                    length = length + 1
+            z = z - 1
+
+        b = i + 1
+        while b <= (len(d) - 1):
+
+            if d.get(b) is None:
+                break
+            else:
+                if not d.get(b):
+                    length = length + 1
+            b = b + 1
+        if length > longest:
+            longest = length
+
+    return longest
+
+
+# Given an array of integers, find two numbers such that they add up to a specific target number.
+# The function twoSum should return indices of the two numbers such that they add up to the target, where
+# index1 must be less than index2. Please note that your returned answers (both index1 and index2) are not
+# zero-based.
+# You may assume that each input would have exactly one solution.
+# Input: numbers={2, 7, 11, 15}, target=9
+# Output: index1=1, index2=2
+#
+def twoSum(A=[]):
+    pass
+
+
+
+print(get_sort_length([3, 5, 8, 7, 10, 0, 6, 1, 9, 2]))
