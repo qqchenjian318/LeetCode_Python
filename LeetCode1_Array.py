@@ -282,7 +282,7 @@ def three_sum_closest(A=[], target=0):
         while j < k:
             result = abs((x + B[j] + B[k]) - target)
             # 计算出当前的差值
-            print('resulet %s and value %s' % (result,value))
+            print('resulet %s and value %s' % (result, value))
             if result < value:
                 ss = '当前记录的大小 %s  %s %s ' % (x, B[j], B[k])
                 value = result
@@ -293,4 +293,101 @@ def three_sum_closest(A=[], target=0):
 
     print(ss)
 
-print(three_sum_closest([-1, 2, 1, -4], 1))
+
+# Given an array S of n integers, are there elements a; b; c, and d in S such that a+b+c+d = target?
+# Find all unique quadruplets in the array which gives the sum of target.
+# Note:
+# • Elements in a quadruplet (a; b; c; d) must be in non-descending order. (ie, a  b  c  d)
+# • The solution set must not contain duplicate quadruplets.
+# For example, given array S = {1 0 -1 0 -2 2}, and target = 0.
+# A solution set is:
+# (-1, 0, 0, 1)
+# (-2, -1, 1, 2)
+# (-2, 0, 0, 2)
+# 跟上面的差不多是一个系列的问题
+# 如果像上面那样  先排序 然后左右夹逼的话 时间复杂度会到达 O(n ~ 3) 会超时 所以 需要其他的优化策略
+#
+def four_sum_normal(A=[], target=0):
+    # 对源数据 进行排序
+    B = sort(A)
+    print(B)
+
+    for i in range(len(B) - 3):
+        j = i + 1
+        X = B[i]
+        while j <= len(B) - 2:
+            Y = B[j]
+            k = j + 1
+            l = len(B) - 1
+            while k < l:
+                if X + Y + B[k] + B[l] < target:
+                    k += 1
+                elif X + Y + B[k] + B[l] > target:
+                    l -= 1
+                else:
+                    print('%s  %s  %s  %s  ' % (X, Y, B[k], B[l]))
+                    l -= 1
+                    k += 1
+            j += 1
+
+
+# 优化后的4sum 答案
+def four_sum_fast(A=[], target=0):
+    B = sort(A)
+    print(B)
+    twoSum = {}
+    # 先用一个map集合 保存两位数的和 O( n ~ 2)
+    for i in range(len(B) - 1):
+        j = i + 1
+        while j < len(B):
+            twoSum[B[i] + B[j]] = [i, j]
+            j += 1
+
+    # 然后再左右夹逼
+    for k in range(len(B)):
+        l = k + 1
+        while l < len(B):
+            key = target - B[k] - B[l]
+            s = twoSum.get(key)
+            if s is not None and s[0] > k and s[0] > l and s[1] > k and s[1] > l:
+                print('结果是：%s  %s  %s  %s ' % (B[k], B[l], B[s[0]], B[s[1]]))
+            l += 1
+
+
+# Given an array and a value, remove all instances of that value in place and return the new length.
+# The order of elements can be changed. It doesn’t matter what you leave beyond the new length.
+# 移除掉array里面的某个值，而且返回新的数组的长度
+#
+def array_remove(A=[], value=0):
+    for i in A:
+        if i == value:
+            A.remove(i)
+
+    print('结果是 %s  length %s' % (A, len(A)))
+
+
+# 用index来实现数据移除
+def array_remove_2(A=[], value=0):
+    index = 0
+    for i in range(len(A)):
+        if A[i] != value:
+            A[index] = A[i]
+            index += 1
+    print('结果是 %s  length %s' % (A[0: index], index))
+
+# Implement next permutation, which rearranges numbers into the lexicographically next greater permutation
+# of numbers.
+# If such arrangement is not possible, it must rearrange it as the lowest possible order (ie, sorted in ascending
+# order).
+# The replacement must be in-place, do not allocate extra memory.
+# Here are some examples. Inputs are in the left-hand column and its corresponding outputs are in the
+# right-hand column.
+# 1,2,3 → 1,3,2
+# 3,2,1 → 1,2,3
+# 1,1,5 → 1,5,1
+# 题意就是寻找比当前排列顺序大的下一个排列
+# 因为降序是没法变得更大的 所以 降序是从后往前找到第一个升序对的位置
+#
+
+
+print(array_remove_2([1, 0, -1, 0, -2, 2], 1))
