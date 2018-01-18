@@ -1,3 +1,4 @@
+# coding=utf-8
 # Given a sorted array, remove the duplicates in place such that each element appear only once
 # and return the new length.
 # Do not allocate extra space for another array, you must do this in place with constant memory.
@@ -6,7 +7,6 @@
 from re import L
 
 import sys
-from numpy import sort
 
 
 def remove_duplicates(L=[]):
@@ -375,6 +375,7 @@ def array_remove_2(A=[], value=0):
             index += 1
     print('结果是 %s  length %s' % (A[0: index], index))
 
+
 # Implement next permutation, which rearranges numbers into the lexicographically next greater permutation
 # of numbers.
 # If such arrangement is not possible, it must rearrange it as the lowest possible order (ie, sorted in ascending
@@ -388,6 +389,47 @@ def array_remove_2(A=[], value=0):
 # 题意就是寻找比当前排列顺序大的下一个排列
 # 因为降序是没法变得更大的 所以 降序是从后往前找到第一个升序对的位置
 #
+# 思路是
+# 从右向左 找到第一个降序的地方 即 A[i] > A[i - 1]
+# 在i - 1 的右边 从右到左 找到 第一个 A[j] > A[i - 1]
+# 将 j 和 i - 1交换 然后将 j右边的进行降序排列
+# 要求不能增加额外的内存空间
+# 1243
+# 1324
+# 为了图方便 使用了sorted函数 增加了额外的内存消耗。。。
+#
+def find_big_sort(A=[]):
+    length = len(A)
+    j = len(A)
+    while j >= 0:
+        j -= 1
+        if j == 0:
+            B = sorted(A[:length - 1])
+            z = 0
+            while z < len(B):
+                A[z] = B[z]
+                z += 1
+        if A[j] > A[j - 1]:
+            # 找到 A[i] > A[i - 1] 开始寻找第一个大于 A[i- 1]的数A[j]
+            i = length
+            while i > j - 1:
+                i -= 1
+                if A[i] > A[j - 1]:
+                    # 交换i 和 j - 1
+                    temple = A[i]
+                    A[i] = A[j - 1]
+                    A[j - 1] = temple
+                    break
+            # 升序排列 A[j] --A[length - 1]
+            print(A)
+            print(' j的结果是---%s  ' % j)
+            B = sorted(A[j:length], reverse=False)
+            k = 0
+            while k < len(B):
+                A[j + k] = B[k]
+                k += 1
+            break
+    print(A)
 
 
-print(array_remove_2([1, 0, -1, 0, -2, 2], 1))
+print(find_big_sort([1, 2, 7, 4, 3, 1]))
