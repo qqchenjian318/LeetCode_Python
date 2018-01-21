@@ -4,6 +4,7 @@
 # Do not allocate extra space for another array, you must do this in place with constant memory.
 # For example, Given input array A = [1,1,2],
 # Your function should return length = 2, and A is now [1,2].
+from math import factorial
 from re import L
 
 import sys
@@ -231,7 +232,7 @@ def two_sum(A=[], target=0):
 # 3、 在j和k同时移动的时候 要判断 他们的下一个值是否和上一个值相同 如果都相同 说明是重复的数字
 # 时间复杂度  貌似是O(n * n)
 def three_sum(A=[], target=0):
-    B = sort(A)
+    B = sorted(A)
     print(B)
     for i in range(len(B) - 2):
         # 先固定一个数 B[i]
@@ -269,7 +270,7 @@ def three_sum(A=[], target=0):
 # 其实道理都是一样的
 
 def three_sum_closest(A=[], target=0):
-    B = sort(A)
+    B = sorted(A)
     print(B)
     value = 100
     ss = ''
@@ -309,7 +310,7 @@ def three_sum_closest(A=[], target=0):
 #
 def four_sum_normal(A=[], target=0):
     # 对源数据 进行排序
-    B = sort(A)
+    B = sorted(A)
     print(B)
 
     for i in range(len(B) - 3):
@@ -333,7 +334,7 @@ def four_sum_normal(A=[], target=0):
 
 # 优化后的4sum 答案
 def four_sum_fast(A=[], target=0):
-    B = sort(A)
+    B = sorted(A)
     print(B)
     twoSum = {}
     # 先用一个map集合 保存两位数的和 O( n ~ 2)
@@ -421,15 +422,122 @@ def find_big_sort(A=[]):
                     A[j - 1] = temple
                     break
             # 升序排列 A[j] --A[length - 1]
-            print(A)
-            print(' j的结果是---%s  ' % j)
             B = sorted(A[j:length], reverse=False)
             k = 0
             while k < len(B):
                 A[j + k] = B[k]
                 k += 1
             break
-    print(A)
+    return A
 
 
-print(find_big_sort([1, 2, 7, 4, 3, 1]))
+# The set [1,2,3,⋯,n] contains a total of n! unique permutations.
+# By listing and labeling all of the permutations in order, We get the following sequence (ie, for n = 3):
+# "123"
+# "132"
+# "213"
+# "231"
+# "312"
+# "321"
+# Given n and k, return the kth permutation sequence.
+# Note: Given n will be between 1 and 9 inclusive.
+# 其实这题跟上一题是一脉相承的 上题求的是 下一个更大的排列
+# 那么这题也可以借用上题的代码
+# 首先 我们初始化第一个排列 然后求下一个排列 直到求出 前k个排列
+# 需要检查k的边界，因为要求是不重复的排列 那么n个数的排列 最多就 n的阶乘个
+
+def permutation_seq_1(n=0, k=0):
+    A = list(range(n + 1))
+    a = 1
+    while a <= n:
+        A[a] = a
+        a += 1
+    print(A[1:])
+    s = A[1:].__str__()
+    B = A[1:]
+    # 如果k大于 n的阶乘，也就是说 并没有这么多不重复排列的话 就重置k的值 为n个数 最多的排列方式
+    if k > factorial(n):
+        k = factorial(n)
+    while k > 1:
+        k -= 1
+        B = find_big_sort(B)
+        s = s + '  ' + B.__str__()
+
+    return s
+
+
+# 还是求1、2、...n 的前k个无重复排列
+# 上面是暴力的方式 去求所有的排列 那么下面我们就利用康托的编码思路 进行优化
+# 首先科普一下 什么是康托展开 X=a[n]*(n-1)!+a[n-1]*(n-2)!+...+a[i]*(i-1)!+...+a[1]*0!
+# 所谓的康托展开 表示的是当前排列 在n个不同元素的全排列中的名次，比如213 在这3个数的所有排列中排第3
+# 其中 a[i] 为当前未出现的元素中排在第几个（从0开始）(注意 这里是因为编码器的符合限制 所以才写出这样的 并不是传统的
+# 表示 a数列中的第i个元素 而是 a[i]表示的是当前未出现的元素中排列在第几个)
+# 怎么理解a[i]呢 我们可以通过举例来说明
+# 比如 排列 312 他的康托展开就是
+# X = a[3] * (3 - 1)! + a[1] * ( 1 - 1)! + a[2] * ( 2 - 1)!
+# a[3] 此时i是3 而当前未出现的元素 就只有 1 2 ，那么如果从0 开始的话， 3 在 1 2 中的排列位置 就是 2 所以 a[3] = 2
+# a[1] 此时i = 1 而当前未出现的元素 只有 2，那么1 的排列位置就是 0 所以 a[1] = 0
+# a[2] 此时 i = 2 而当前未出现的就没有了 所以 他肯定排列位置是0 所以 a[2] = 0
+# 所以 X = 2 * 2! + 0 * 0! + 0 * 1! = 4
+# 意思就是 排列 312 ，在所有的这三个数的排列中 排列第 5 ，因为前面有4个比他小的排列
+#  元素 1 2 3的全排列如下
+#  [1, 2, 3]  [1, 3, 2]  [2, 1, 3]  [2, 3, 1]  [3, 1, 2]  [3, 2, 1]
+#  可以看到 312 确实是排列在 第五个的
+# 那么为什么康托展开 可以准确的计算出当前排列在所有排列中的位置呢？
+# 我们来看 他的核心思想 其实就是 a[i] 表示在当前未出现的元素中排列第几
+# 比如上面的例子 3 3前面如果出现过的元素 我们就不管了 那么在所有没出现的元素中 1 2 只要是比3小的数字  那么 如果把3的位置替换为
+# 该数字 该数字后面的排列 都比 3在该位置的排列小
+# 比如 312  如果把1放在第一位 那么存在的数列就是 123   132  他们肯定是比 312小的
+# 如果把2 放在第一位那么 存在的数列 就是 213 231 他们肯定也是比 312 小的
+# 所以 我们可以得出 所以未出现的元素 比i小的元素 他们与i交换位置 之后 所有的排列 都比原数列小
+# 这是第i位的情况 那么依次类推 就可以得到康托展开式了 从而计算出所有比当前排列小的排列的数量
+
+# 搞清楚了康托展开 那么跟我们这道题有什么关系呢？
+# 我们要求的是 前k个排列
+# 康托展开 是排列 到自然数的映射
+# 那么他自然可以逆展开 从自然数 求得排列
+# 那么我们的问题就变成了 求第k个排列 从而自然可以算出 第k -1 直到 第1个排列
+# 那么怎么来求第k个排列呢？
+# 比如 求3个元素的第4个排列
+# 根据康托展开 4 - 1 = a[x]* (x-1)! + a[y] * (y - 1)! +  a[z] * (z - 1)
+# 3 % 2! = 1 ~ 1
+# 1 % 1! = 1 ~ 0
+# 说明 第一位数 比x 小的数 有1 个 在123三个数中 那应该是2
+# 第二位 比 y 小的数有1个  在未出现的元素13中 只有3 那么y = 3
+# 第三位 那z = 1
+# 那么结果应该是 213
+#  3 1 2
+# 所以 逆展开的思路其实就是
+# 第一个数 a.1 = (k - 1) % (n - 1)! 为什么呢？是因为 如果你想要k这个值非常的大  那么 你第一个数肯定就得非常的大 n个数的全排列是 n ! 个
+# 如果 k > (n - 1)! 那说明 第一位 肯定大于1 ，因为所有第一位为1的排列个数 也只有(n - 1)!个
+# 那么 k / (n - 1)! = x 得到的x，其实就可以确定 第一个数 在所有未出现的元素中的位置了
+# 比如 如果x = 3，那么说明 k 肯定是大于等于 3 * (n - 1) 小于 4 * (n - 1)! 那么第一个数就能确定了
+# 依次类推 就可以确定排列中的每一位数
+# 下面用代码来实现 n个元素的第k个排列
+# 2 - 1 = ？
+# 1 % 2! = 0 ~ 1 1
+# 1 % 1! = 1 ~ 0 3
+
+def permutation_seq_2(n=0, k=0):
+    if k == 0 or n == 0:
+        return '没有这样的排列'
+    A = list(range(n + 1))
+    for i in range(n):
+        A[i] = i
+    result = k - 1
+    i = n
+    s = ''
+    while n > 1:
+        a = result // factorial(n - 1) + 1  # 如果 = 1 说明
+        result = result % factorial(n - 1)
+        n -= 1
+        s = s + ' ' + A[a].__str__()
+        del A[a]  # 删除数组中指定位置的元素
+    s = s + ' ' + A[1].__str__()
+    print(s)
+    k -= 1
+    if k > 0:
+        permutation_seq_2(i, k)
+
+
+print(permutation_seq_2(3, 3))
