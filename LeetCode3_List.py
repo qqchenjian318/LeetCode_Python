@@ -13,7 +13,6 @@
 #
 # 链表的节点
 class ListNode(object):
-
     def __init__(self, x):
         self.val = x
         self.next = None
@@ -85,7 +84,7 @@ n.next = None
 #
 # 思路就是从时候
 #
-def reverse_link(a , m, n):
+def reverse_link(a, m, n):
     temp2 = None
     new = ListNode(0)
     new.val = 'start'
@@ -115,15 +114,55 @@ f = ListNode(0)
 
 a.val = 1
 a.next = b
-b.val = 2
+b.val = 4
 b.next = c
 c.val = 3
 c.next = d
-d.val = 4
+d.val = 2
 d.next = e
 e.val = 5
-e.next = None
-result = reverse_link(a, 2, 5)
+e.next = f
+f.val = 2
+f.next = None
+
+
+# Partition List
+# Given a linked list and a value x, partition it such that all nodes less than x come before nodes greater
+# than or equal to x.
+# You should preserve the original relative order of the nodes in each of the two partitions.
+# For example, Given 1->4->3->2->5->2 and x = 3, return 1->2->2->4->3->5.
+#
+# 给定一个链表和一个x，分离这个链表，将比x小的节点都放在前面，大于等于的放到后面 每部分元素的原始相对位置不变
+# 好吧，思路还是相对简单的 遍历链表大的就放在大的链表那边 小的就放在小的链表那边 然后将两个组合起来即可
+
+def partition_list(a, x):
+    small = None  # 头节点
+    big = None  # 头节点
+    right = None
+    first = None
+    while a is not None:
+        print(a.val)
+        if a.val < x:
+            if small is not None:
+                small.next = a
+                small = small.next
+            else:
+                small = a
+                first = a
+        else:
+            if big is not None:
+                big.next = a
+                big = big.next
+            else:
+                big = a
+                right = a
+        a = a.next
+    small.next = right
+    big.next = None
+    return first
+
+
+result = partition_list(a, 3)
 while result is not None:
     print(result.val)
     result = result.next
