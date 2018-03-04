@@ -162,7 +162,50 @@ def partition_list(a, x):
     return first
 
 
-result = partition_list(a, 3)
+#  Remove Duplicates from Sorted List
+#  Given a sorted linked list, delete all duplicates such that each element appear only once.
+#  For example,
+#  Given 1->1->2, return 1->2.
+#  Given 1->1->2->3->3, return 1->2->3.
+#
+#  将重复的元素从一个有序的链表中移除掉
+#  有一个有序的链表，删除其中所有的重复元素
+#
+def remove_dup_list(a):
+    temp = None
+    last = None
+    first = a
+    while a is not None:
+        # print(a.val)
+        if temp != a.val:
+            # 说明是不重复的
+            if last is not None:
+                last.next = a.next
+            last = a
+
+        temp = a
+        a = a.next
+    return first
+
+
+a = ListNode(0)
+b = ListNode(0)
+c = ListNode(0)
+d = ListNode(0)
+e = ListNode(0)
+f = ListNode(0)
+
+a.val = 1
+a.next = b
+b.val = 1
+b.next = c
+c.val = 2
+c.next = d
+d.val = 3
+d.next = e
+e.val = 3
+e.next = None
+result = remove_dup_list(a)
 while result is not None:
     print(result.val)
     result = result.next
