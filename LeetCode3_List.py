@@ -183,9 +183,41 @@ def remove_dup_list(a):
                 last.next = a.next
             last = a
 
-        temp = a
+        temp = a.val
         a = a.next
     return first
+
+
+# Remove Duplicates from Sorted List II
+# Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers
+# from the original list.
+# For example,
+# Given 1->2->3->3->4->4->5, return 1->2->5.
+# Given 1->1->1->2->3, return 2->3.
+
+# 删除链表中的重复元素，和上题类似
+# 不同的是 将有重复元素的节点都删除掉
+# 思路
+# 利用递归解题
+# 如果节点 a的值和a的下个节点p的值相同
+# 那么 就将p指向p的下一个节点 直到返回不相同的节点
+# 如果不等
+# 那么 a的下一个节点 等于下一个不相同的节点
+# 所以整个函数 其实返回的就是 每一段的不相同的节点
+
+def remove_dup_node_2(a):
+    if a is None or a.next is None:
+        return a
+    p = a.next
+    if a.val == p.val:
+        # 两者相等
+        while p is not None and a.val == p.val:
+            p = p.next
+        return remove_dup_node_2(p)
+    else:
+        # 两者不等
+        a.next = remove_dup_node_2(p)
+        return a
 
 
 a = ListNode(0)
@@ -197,15 +229,15 @@ f = ListNode(0)
 
 a.val = 1
 a.next = b
-b.val = 1
+b.val = 2
 b.next = c
-c.val = 2
+c.val = 3
 c.next = d
 d.val = 3
 d.next = e
-e.val = 3
+e.val = 4
 e.next = None
-result = remove_dup_list(a)
+result = remove_dup_node_2(a)
 while result is not None:
     print(result.val)
     result = result.next
