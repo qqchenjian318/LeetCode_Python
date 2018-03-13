@@ -220,6 +220,32 @@ def remove_dup_node_2(a):
         return a
 
 
+# Rotate List
+# Given a list, rotate the list to the right by k places, where k is non-negative.
+# For example: Given 1->2->3->4->5->nullptr and k = 2, return 4->5->1->2->3->nullptr.
+#
+# 旋转list
+# 从第k个节点开始旋转list
+#
+# 思路：首先 将链表形成一个闭环
+# 然后算出 需要第几个那里断开
+# 然后从断开处断开 将下一个节点作为首节点 即可
+
+def rotate_list(a, k):
+    temple = a
+    count = 0
+    while temple.next is not None:
+        count += 1
+        temple = temple.next
+    k = count - k % count
+    temple.next = a
+    for i in range(k):
+        temple = temple.next
+    a = temple.next
+    temple.next = None
+
+    return a
+
 a = ListNode(0)
 b = ListNode(0)
 c = ListNode(0)
@@ -233,11 +259,16 @@ b.val = 2
 b.next = c
 c.val = 3
 c.next = d
-d.val = 3
+d.val = 4
 d.next = e
-e.val = 4
+e.val = 5
 e.next = None
-result = remove_dup_node_2(a)
-while result is not None:
+
+result = rotate_list(a, 2)
+count = 0
+while result is not None and count < 10:
     print(result.val)
     result = result.next
+    count += 1
+
+
