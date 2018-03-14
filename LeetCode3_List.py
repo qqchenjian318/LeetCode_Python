@@ -246,6 +246,48 @@ def rotate_list(a, k):
 
     return a
 
+# Remove Nth Node From End of List
+# Given a linked list, remove the nth node from the end of list and return its head.
+# For example, Given linked list: 1->2->3->4->5, and n = 2.
+# After removing the second node from the end, the linked list becomes 1->2->3->5.
+# Note:
+# Given n will always be valid.
+# Try to do this in one pass.
+
+# 移除掉倒数 第n个node
+# 因为是移除倒数第n个节点
+# 所以可以两个指针  第一个p指针先移动n步  然后两个一起移动
+# 然后将q指针的next指向 下下个即可
+
+
+def remove_n_node(a, n):
+    head = a
+    p = a
+    q = a
+
+    for i in range(n):
+        p = p.next
+    while p.next is not None:
+        p = p.next
+        q = q.next
+    q.next = q.next.next
+    return head
+
+
+# Swap Nodes in Pairs
+# Given a linked list, swap every two adjacent nodes and return its head.
+# For example, Given 1->2->3->4, you should return the list as 2->1->4->3.
+# Your algorithm should use only constant space. You may not modify the values in the list, only nodes
+# itself can be changed.
+
+# 一对对的交换节点
+# 有一个链表交互相邻两个节点
+# 例如 1 2 3 4  result 2 1 4 3
+# 规定是 不能增加空间 你不能修改链表中的值 只能改变节点本身
+def swap_node(a):
+
+   pass
+
 a = ListNode(0)
 b = ListNode(0)
 c = ListNode(0)
@@ -264,7 +306,7 @@ d.next = e
 e.val = 5
 e.next = None
 
-result = rotate_list(a, 2)
+result = remove_n_node(a, 3)
 count = 0
 while result is not None and count < 10:
     print(result.val)
