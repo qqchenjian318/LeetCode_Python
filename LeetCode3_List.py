@@ -293,9 +293,13 @@ def remove_n_node(a, n):
 def swap_node(a):
     helper = ListNode(0)
     helper.next = a
-    pre = helper
-    cur = a
-    pass
+    pre, cur = helper, a
+    while cur and cur.next:
+        pre.next = cur.next
+        cur.next = pre.next.next
+        pre.next.next = cur
+        pre, cur = cur, cur.next
+    return helper.next
 
 # Reverse Nodes in k-Group
 # Given a linked list, reverse the nodes of a linked list k at a time and return its modified list.
@@ -307,7 +311,8 @@ def swap_node(a):
 # For k = 3, you should return: 3->2->1->4->5
 # 上面题目的衍生题目，反转k长度的链表
 # 意思就是 将链表 每k个节点进行位置转换
-
+def swap_k_node(head):
+    pass
 
 
 
@@ -329,7 +334,7 @@ d.next = e
 e.val = 5
 e.next = None
 
-result = remove_n_node(a, 3)
+result = swap_node(a)
 count = 0
 while result is not None and count < 10:
     print(result.val)
