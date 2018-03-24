@@ -259,8 +259,13 @@ def rotate_list(a, k):
 # 所以可以两个指针  第一个p指针先移动n步  然后两个一起移动
 # 然后将q指针的next指向 下下个即可
 
+# 下面算法没有考虑 节点总数小于n的情况
+# 还有n《= 0 的情况
+
 
 def remove_n_node(a, n):
+    if n <= 0:
+        return 'n值小于0了'
     head = a
     p = a
     q = a
@@ -284,9 +289,27 @@ def remove_n_node(a, n):
 # 有一个链表交互相邻两个节点
 # 例如 1 2 3 4  result 2 1 4 3
 # 规定是 不能增加空间 你不能修改链表中的值 只能改变节点本身
+# 这道题的思路就是 每次跳两个节点
 def swap_node(a):
+    helper = ListNode(0)
+    helper.next = a
+    pre = helper
+    cur = a
+    pass
 
-   pass
+# Reverse Nodes in k-Group
+# Given a linked list, reverse the nodes of a linked list k at a time and return its modified list.
+# If the number of nodes is not a multiple of k then left-out nodes in the end should remain as it is.
+# You may not alter the values in the nodes, only nodes itself may be changed.
+# Only constant memory is allowed.
+# For example, Given this linked list: 1->2->3->4->5
+# For k = 2, you should return: 2->1->4->3->5
+# For k = 3, you should return: 3->2->1->4->5
+# 上面题目的衍生题目，反转k长度的链表
+# 意思就是 将链表 每k个节点进行位置转换
+
+
+
 
 a = ListNode(0)
 b = ListNode(0)
